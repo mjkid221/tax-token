@@ -32,6 +32,7 @@ The smart contract implements ERC20 functionality with the following additional 
 - Blacklisting capability to block known sniper bots
 - Pausable token transfers (except for owner during initial liquidity setup)
 - Configurable fee and limit exemptions for specific accounts
+- Re-entrancy guard with transient storage (mostly for self triggered re-entrancy during uniswap transfers :p)
 
 ## Getting Started
 
