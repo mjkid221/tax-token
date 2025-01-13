@@ -5,12 +5,12 @@ import { vars } from "hardhat/config";
 import type { NetworkUserConfig } from "hardhat/types";
 
 import "./tasks/accounts";
-import "./tasks/lock";
+import "./tasks/token";
 
 // Run 'npx hardhat vars setup' to see the list of variables that need to be set
 
 const mnemonic: string = vars.get("MNEMONIC");
-const infuraApiKey: string = vars.get("INFURA_API_KEY");
+const rpcApiKey: string = vars.get("INFURA_API_KEY");
 
 const chainIds = {
   "arbitrum-mainnet": 42161,
@@ -25,7 +25,7 @@ const chainIds = {
   sepolia: 11155111,
 };
 
-function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
+function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig & { url: string } {
   let jsonRpcUrl: string;
   switch (chain) {
     case "avalanche":
@@ -34,8 +34,12 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
     case "bsc":
       jsonRpcUrl = "https://bsc-dataseed1.binance.org";
       break;
+    case "mainnet": {
+      jsonRpcUrl = "https://eth-mainnet.g.alchemy.com/v2/" + rpcApiKey;
+      break;
+    }
     default:
-      jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
+      jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + rpcApiKey;
   }
   return {
     accounts: {
@@ -76,6 +80,8 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic,
       },
+      enableTransientStorage: true,
+      forking: { url: getChainConfig("mainnet").url, blockNumber: 21512003, enabled: true },
       chainId: chainIds.hardhat,
     },
     ganache: {
@@ -101,8 +107,10 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.19",
+    version: "0.8.24",
+
     settings: {
+      evmVersion: "cancun",
       metadata: {
         // Not including the metadata hash
         // https://github.com/paulrberg/hardhat-template/issues/31

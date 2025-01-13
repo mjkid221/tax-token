@@ -1,7 +1,10 @@
 {
-  "name": "@mjkid221/tax-token",
+  "name": "tax-token",
   "description": "",
   "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/mjkid221/tax-token"
+  },
   "author": {
     "name": "mjkid221",
     "url": "https://github.com/mjkid221"
@@ -12,6 +15,8 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.2",
+    "@openzeppelin/contracts": "^5.1.0",
+    "@prb/math": "^4.1.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
@@ -21,10 +26,14 @@
     "@types/node": "^20.10.4",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
+    "@uniswap/lib": "4.0.1-alpha",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "1.1.0-beta.0",
     "chai": "^4.3.10",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-no-skip-tests": "^1.1.0",
     "ethers": "^6.9.0",
     "fs-extra": "^11.2.0",
     "hardhat": "^2.19.2",
@@ -61,19 +70,21 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rimraf ./artifacts ./cache ./coverage ./types ./coverage.json && bun run typechain",
+    "clean": "rimraf ./artifacts ./cache ./coverage ./types ./coverage.json && pnpm run typechain",
     "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
-    "coverage": "hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"test/**/*.ts\" && bun run typechain",
-    "deploy:contracts": "hardhat deploy",
-    "lint": "bun run lint:sol && bun run lint:ts && bun run prettier:check",
+    "coverage": "hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"test/**/*.ts\" && pnpm run typechain",
+    "lint": "pnpm run lint:sol && pnpm run lint:ts && pnpm run prettier:check",
     "lint:sol": "solhint --max-warnings 0 \"contracts/**/*.sol\"",
     "lint:ts": "eslint --ignore-path ./.eslintignore --ext .js,.ts .",
-    "postcompile": "bun run typechain",
+    "postcompile": "pnpm run typechain",
     "prettier:check": "prettier --check \"**/*.{js,json,md,sol,ts,yml}\"",
     "prettier:write": "prettier --write \"**/*.{js,json,md,sol,ts,yml}\"",
-    "task:deployLock": "hardhat task:deployLock",
-    "task:withdraw": "hardhat task:withdraw",
+    "task:deployToken": "hardhat task:deployToken",
     "test": "hardhat test",
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
+  },
+  "packageManager": "pnpm@8.15.9",
+  "engines": {
+    "node": "^22.11.0"
   }
 }
